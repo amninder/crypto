@@ -1,0 +1,2 @@
+1. http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/emt.html
+2. Miller Rabin Primality test has O(log(n)^4)
