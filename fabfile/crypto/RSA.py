@@ -42,3 +42,14 @@ def modinv(a, m):
 	if g != 1:
 		raise ValueError
 	return x%m
+
+"""Euclid's algorithm to find GCD: http://en.wikipedia.org/wiki/Euclidean_algorithm"""
+def GCD(a, b):
+	a = 12
+	b = 4
+	while a!=b:
+		if a>b:
+			a -= b
+		else:
+			b -= a
+	return a

@@ -1,4 +1,4 @@
-from decimal import * #used for step 5
+# coding=utf-8
 from random import randrange
 from fabric.api import *
 from fabric.colors import *
@@ -10,10 +10,10 @@ from datetime import datetime
 from gmpy2 import *
 import gmpy2
 
-a = gmpy2.xmpz(3)
+a = gmpy2.xmpz(2) # use 4 for good result
 b = gmpy2.xmpz(500)
 env.digitParameter = a
-
+env.sample_string = "This is a sample sentence."
 # Step 1
 env._p 		= 0
 env._q 		= 0
@@ -102,7 +102,11 @@ def step2():
 		env._m 		= num[1]
 		env._phi 	= (env._e * env._d) - 1#num[2]
 		env._lambda	= num[3]
-		print( "n: \t%d \nm: \t%d \nphi: \t%d \nlambda: %d"%(env._n, env._m, env._phi, env._lambda))
+		# print( "n: \t%d \nm: \t%d \nphi: \t%d \nlambda: %d"%(env._n, env._m, env._phi, env._lambda))
+		print("n:\t%d, No. of Digits: %d"%(env._n, getDigits(env._n)))
+		print("m:\t%d, No. of Digits: %d"%(env._m, getDigits(env._m)))
+		print("phi:\t%d, No. of Digits: %d"%(env._phi, getDigits(env._phi)))
+		print("lambda:\t%d, No. of Digits: %d"%(env._lambda, getDigits(env._lambda)))
 	except AssertionError, e:
 		print(red("Mr. Singh, you did not run Step 1"))
 	else:
@@ -115,6 +119,13 @@ def step3():
 	"""Step 3: Choose an integer e, such that GCD(e, phi)=1"""
 	print(white("\nExecuting step 3 of algorithm"))
 	print(cyan("This step is being executed in step 1"))
+	print(cyan("GCD(%d, %d) = %d"%(env._e, env._phi, RSA.gcd(env._e, env._phi))))
+	if RSA.gcd(env._e, env._phi)!=1:
+		t = prompt("Do you want to run again?(Y or N)")
+		if t=="Y" or t=="y":
+			local("fab step1 step2 step3 step4 step5 step6")
+		else:
+			pass
 
 @task
 def step4():
@@ -127,13 +138,16 @@ def step5():
 	"""Step 5: g = m+1"""
 	print(white("Executing step 5 of algorithm"))
 	env._g = env._m + 1
-	print ("g:\t%d"%env._g)
+	print ("g =\t%d, No. of digits: %d"%(env._g, getDigits(env._g)))
 
 @task
 def step6():
 	"""Step 5: Compute multiplicative inverse: mu = lambda^-1 mod m"""
+	print(white("Executing Step 6 of algorithm"))
 	env._mu = RSA.modinv(env._lambda, env._m)
-	print("mu =\t%d"%env._mu)
+	print("mu =\t%d, No. of digits: %d"%(env._mu, getDigits(env._mu)))
+
+
 def test():
 	print (gmpy2.xmpz(RSA.getRandom())**gmpy2.xmpz(550))+(gmpy2.xmpz(RSA.getRandom())**gmpy2.xmpz(550))
 
