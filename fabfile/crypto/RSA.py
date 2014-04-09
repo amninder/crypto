@@ -53,3 +53,11 @@ def GCD(a, b):
 		else:
 			b -= a
 	return a
+
+def str2NumList(strn):
+	"""Converts a string to a list of integers based on ASCII values"""
+	return [ord(chars) for chars in strn]
+
+def numList2String(l):
+	"""Converts a list of integers to a string bsed on ASCII values"""
+	return ''.join(map(chr, l))

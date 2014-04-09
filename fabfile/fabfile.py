@@ -63,10 +63,7 @@ def step1():
 	"""STEP 1: get p, q, r, s. e and d are being computed in this step
 	"""
 	print(white("Executing Step 1 of algorithm."))
-
-	# env._p = miller_rabin_largeN._getRandomNumber()**2**9
 	i = 0
-	# env._p = RSA.getRandom()
 	env._p = generateLargePrime(env.digitParameter)
 	while getDigits(env._q) != getDigits(env._p):
 		env._q = generateLargePrime(env.digitParameter)
@@ -102,7 +99,6 @@ def step2():
 		env._m 		= num[1]
 		env._phi 	= (env._e * env._d) - 1#num[2]
 		env._lambda	= num[3]
-		# print( "n: \t%d \nm: \t%d \nphi: \t%d \nlambda: %d"%(env._n, env._m, env._phi, env._lambda))
 		print("n:\t%d, No. of Digits: %d"%(env._n, getDigits(env._n)))
 		print("m:\t%d, No. of Digits: %d"%(env._m, getDigits(env._m)))
 		print("phi:\t%d, No. of Digits: %d"%(env._phi, getDigits(env._phi)))
@@ -146,6 +142,12 @@ def step6():
 	print(white("Executing Step 6 of algorithm"))
 	env._mu = RSA.modinv(env._lambda, env._m)
 	print("mu =\t%d, No. of digits: %d"%(env._mu, getDigits(env._mu)))
+
+@task
+def encrypt():
+	print(white("Executing: Encrypting string"))
+	print(RSA.str2NumList(env.sample_string))
+	print(RSA.numList2String(RSA.str2NumList(env.sample_string)))
 
 
 def test():
