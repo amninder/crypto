@@ -63,14 +63,40 @@ def numList2String(l):
 	return ''.join(map(chr, l))
 
 def encrypt(_g, _s, _e, _n, _m):
-	r = randint(3, _m)
+	r = gmpy2.mpz(randint(3, _m))
 	g = gmpy2.mpz(_g)
 	s = gmpy2.mpz(_s)
 	e = gmpy2.mpz(_e)
 	n = gmpy2.mpz(_n)
 	m = gmpy2.mpz(_m)
-	# return gmpy2.mpz(str(g))**gmpy2.mpz(str(n))
-	# return g**(s**(e%n)) * ((r**m)%(m*m))
-	return (powmod(2, 1, 1))
 
+	s_e_mod_n 	= pow(s, e, n) 
+	r_m = pow(r, m, m*m)
+	return s_e_mod_n * r_m
 
+"""http://www.wojtekrj.net/2008/09/pythonalgorithms-fast-modular-exponentiation-script/"""
+def modularExp(a, n, m):
+	bits = []
+	while n:
+		bits.append(n%2)
+		n /= 2
+	solution = 1
+	bits.reverse()
+	for x in bits:
+		solution = (solution*solution) % m
+		if x:
+			solution = (solution*a) % m
+	return solution
+
+def expo(u, m):
+	q = m
+	prod = 1
+	current = u
+	while q>0:
+		if (q%2)==1:
+			prod = current * prod
+			q -= 1
+			print prod
+	current = current * current
+	q = q/2
+	return prod

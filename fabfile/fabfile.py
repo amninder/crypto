@@ -10,7 +10,7 @@ from datetime import datetime
 from gmpy2 import *
 import gmpy2
 
-a = gmpy2.xmpz(4) # use 4 for good result
+a = gmpy2.xmpz(1) # use 4 for good result
 b = gmpy2.xmpz(500)
 env.digitParameter = a
 env.sample_string = "This is a sample sentence."
@@ -109,14 +109,6 @@ def step2():
 def step3():
 	"""Step 3: Choose an integer e, such that GCD(e, phi)=1"""
 	print(white("\nExecuting step 3 of algorithm"))
-	# print(cyan("This step is being executed in step 1"))
-	# print(cyan("GCD(%d, %d) = %d"%(env._e, env._phi, RSA.gcd(env._e, env._phi))))
-	# if RSA.gcd(env._e, env._phi)!=1:
-	# 	t = prompt("Do you want to run again?(Y or N)")
-	# 	if t=="Y" or t=="y":
-	# 		local("fab step1 step2 step3 step4 step5 step6")
-	# 	else:
-	# 		pass
 	env._e = generateLargePrime(env.digitParameter)
 	x = gcd(env._e, env._phi)
 	while gcd==1:
@@ -157,8 +149,16 @@ def encrypt():
 	env._str2NumList = RSA.str2NumList(env.sample_string)
 	print(env._str2NumList)
 	print(RSA.numList2String(RSA.str2NumList(env.sample_string)))
+	# a = env._str2NumList[0]
+	# print a
+	# RSA.encrypt(env._g, a, env._e, env._n, env._m)
+	#print RSA.modularExp(2, 34, pow(10,10))
 	for num in env._str2NumList:
-		print RSA.encrypt(int(env._g), num, int(env._e), int(env._n), int(env._m)) #(s, e, n, m)
+		print RSA.encrypt(env._g, num, env._e, env._n, env._m) #(s, e, n, m)
+
+@task
+def test():
+	p
 
 def getDigits(num): 
 	i = 0
@@ -172,3 +172,4 @@ def generateLargePrime(p):
 	while not miller_rabin.millerRabin(n, 2):
 		n = (gmpy2.xmpz(RSA.getRandom())**gmpy2.xmpz(p))+(gmpy2.xmpz(RSA.getRandom())**gmpy2.xmpz(p)-1)
 	return n
+
