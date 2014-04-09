@@ -1,5 +1,5 @@
 # coding=utf-8
-from random import randrange
+from random import randrange, randint
 from fabric.api import *
 from fabric.colors import *
 from fabric.operations import *
@@ -10,7 +10,7 @@ from datetime import datetime
 from gmpy2 import *
 import gmpy2
 
-a = gmpy2.xmpz(2) # use 4 for good result
+a = gmpy2.xmpz(4) # use 4 for good result
 b = gmpy2.xmpz(500)
 env.digitParameter = a
 env.sample_string = "This is a sample sentence."
@@ -73,17 +73,12 @@ def step1():
 
 	while getDigits(env._s) != getDigits(env._p):
 		env._s = generateLargePrime(env.digitParameter)
-	env._e = generateLargePrime(env.digitParameter)
-	while getDigits(env._p) != getDigits(env._e):
-		env._e = generateLargePrime(env.digitParameter)
-	while getDigits(env._d) != getDigits(env._p):
-		env._d = generateLargePrime(env.digitParameter)
 	print("p = %d, No. of Digits: %d"%(env._p, getDigits(env._p)))
 	print("q = %d, No. of Digits: %d"%(env._q, getDigits(env._q)))
 	print("r = %d, No. of Digits: %d"%(env._r, getDigits(env._r)))
 	print("s = %d, No. of digits: %d"%(env._s, getDigits(env._s)))
-	print("e = %d, No. of digits: %d"%(env._e, getDigits(env._e)))
-	print("d = %d, No. of digits: %d"%(env._d, getDigits(env._d)))
+	#print("e = %d, No. of digits: %d"%(env._e, getDigits(env._e)))
+	# print("d = %d, No. of digits: %d"%(env._d, getDigits(env._d)))
 
 @task	
 def step2():
@@ -97,12 +92,12 @@ def step2():
 		num = RSA.step2(env._p, env._q, env._r, env._s)
 		env._n 		= num[0]
 		env._m 		= num[1]
-		env._phi 	= (env._e * env._d) - 1#num[2]
+		env._phi 	= num[2]#(env._e * env._d) - 1#num[2]
 		env._lambda	= num[3]
-		print("n:\t%d, No. of Digits: %d"%(env._n, getDigits(env._n)))
-		print("m:\t%d, No. of Digits: %d"%(env._m, getDigits(env._m)))
-		print("phi:\t%d, No. of Digits: %d"%(env._phi, getDigits(env._phi)))
-		print("lambda:\t%d, No. of Digits: %d"%(env._lambda, getDigits(env._lambda)))
+		print("n =\t\t%d, No. of Digits: %d"%(env._n, getDigits(env._n)))
+		print("m =\t\t%d, No. of Digits: %d"%(env._m, getDigits(env._m)))
+		print("phi =\t\t%d, No. of Digits: %d"%(env._phi, getDigits(env._phi)))
+		print("lambda =\t%d, No. of Digits: %d"%(env._lambda, getDigits(env._lambda)))
 	except AssertionError, e:
 		print(red("Mr. Singh, you did not run Step 1"))
 	else:
@@ -114,20 +109,33 @@ def step2():
 def step3():
 	"""Step 3: Choose an integer e, such that GCD(e, phi)=1"""
 	print(white("\nExecuting step 3 of algorithm"))
-	print(cyan("This step is being executed in step 1"))
-	print(cyan("GCD(%d, %d) = %d"%(env._e, env._phi, RSA.gcd(env._e, env._phi))))
-	if RSA.gcd(env._e, env._phi)!=1:
-		t = prompt("Do you want to run again?(Y or N)")
-		if t=="Y" or t=="y":
-			local("fab step1 step2 step3 step4 step5 step6")
-		else:
-			pass
+	# print(cyan("This step is being executed in step 1"))
+	# print(cyan("GCD(%d, %d) = %d"%(env._e, env._phi, RSA.gcd(env._e, env._phi))))
+	# if RSA.gcd(env._e, env._phi)!=1:
+	# 	t = prompt("Do you want to run again?(Y or N)")
+	# 	if t=="Y" or t=="y":
+	# 		local("fab step1 step2 step3 step4 step5 step6")
+	# 	else:
+	# 		pass
+	env._e = generateLargePrime(env.digitParameter)
+	x = gcd(env._e, env._phi)
+	while gcd==1:
+		env._e = generateLargePrime(env.digitParameter)
+		x = gcd(env._e, env._phi)
+		print("GCD(%d, %d)=%d"%(env._e, env._phi, x))
+	print("GCD(%d, %d) = %d"%(env._e, env._phi, x))
+	print("e =\t%d"%(env._e))
 
 @task
 def step4():
 	"""Step 4: Compute secret exponentd, such that (e x d)mod phi=1 [1<d<phi]"""
 	print(white("\nExecuting step 4 of algorithm"))
-	print ("(%d x %d) mod %d = %d"%(env._e, env._d, env._phi, (env._e*env._d % env._phi)))
+	env._d = randint(1, env._phi)
+	x = f_mod((env._e*env._d), env._phi)
+	while x==1:
+		env._d = randint(1, env._phi)
+		x = f_mod((env._e*env._d), env._phi)
+	print("d =\t%d"%(env._d))
 
 @task
 def step5():
@@ -146,14 +154,13 @@ def step6():
 @task
 def encrypt():
 	print(white("Executing: Encrypting string"))
-	print(RSA.str2NumList(env.sample_string))
+	env._str2NumList = RSA.str2NumList(env.sample_string)
+	print(env._str2NumList)
 	print(RSA.numList2String(RSA.str2NumList(env.sample_string)))
+	for num in env._str2NumList:
+		print RSA.encrypt(int(env._g), num, int(env._e), int(env._n), int(env._m)) #(s, e, n, m)
 
-
-def test():
-	print (gmpy2.xmpz(RSA.getRandom())**gmpy2.xmpz(550))+(gmpy2.xmpz(RSA.getRandom())**gmpy2.xmpz(550))
-
-def getDigits(num):
+def getDigits(num): 
 	i = 0
 	while num>0:
 		i += 1

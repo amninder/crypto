@@ -1,6 +1,6 @@
 import miller_rabin
 import mersenne
-import math
+from random import randint
 import gmpy2
 from gmpy2 import *
 from datetime import datetime
@@ -61,3 +61,16 @@ def str2NumList(strn):
 def numList2String(l):
 	"""Converts a list of integers to a string bsed on ASCII values"""
 	return ''.join(map(chr, l))
+
+def encrypt(_g, _s, _e, _n, _m):
+	r = randint(3, _m)
+	g = gmpy2.mpz(_g)
+	s = gmpy2.mpz(_s)
+	e = gmpy2.mpz(_e)
+	n = gmpy2.mpz(_n)
+	m = gmpy2.mpz(_m)
+	# return gmpy2.mpz(str(g))**gmpy2.mpz(str(n))
+	# return g**(s**(e%n)) * ((r**m)%(m*m))
+	return (powmod(2, 1, 1))
+
+
