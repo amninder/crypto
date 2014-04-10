@@ -1,2 +1,5 @@
 1. http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/emt.html
 2. Miller Rabin Primality test has O(log(n)^4)
+3. http://sergematovic.tripod.com/rsa1.html
+4. http://logos.cs.uic.edu/340%20Notes/rsa.html explaination
+5. http://prezi.com/enwwovnoujuq/modified-rsa-encryption-algorithm-mrea/

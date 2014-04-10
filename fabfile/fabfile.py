@@ -10,7 +10,7 @@ from datetime import datetime
 from gmpy2 import *
 import gmpy2
 
-a = gmpy2.xmpz(1) # use 4 for good result
+a = gmpy2.xmpz(2) # use 4 for good result
 b = gmpy2.xmpz(500)
 env.digitParameter = a
 env.sample_string = "This is a sample sentence."
@@ -38,6 +38,9 @@ env._g 		= 0
 # Step 6
 env._mu 	= 0
 
+env._encrypted = []
+env._decrypted = []
+
 @task
 def getRandomNumber():
 	""": get random number based upon Miller Rabin Primality test"""
@@ -59,6 +62,9 @@ def testForPrimality():
 		Step 1: choose four random numbers
 """
 @task
+def runAlgorithm():
+	local("fab step1 step2 step3 step4 step5 step6 encrypt decrypt")
+@task
 def step1():
 	"""STEP 1: get p, q, r, s. e and d are being computed in this step
 	"""
@@ -77,8 +83,6 @@ def step1():
 	print("q = %d, No. of Digits: %d"%(env._q, getDigits(env._q)))
 	print("r = %d, No. of Digits: %d"%(env._r, getDigits(env._r)))
 	print("s = %d, No. of digits: %d"%(env._s, getDigits(env._s)))
-	#print("e = %d, No. of digits: %d"%(env._e, getDigits(env._e)))
-	# print("d = %d, No. of digits: %d"%(env._d, getDigits(env._d)))
 
 @task	
 def step2():
@@ -92,7 +96,7 @@ def step2():
 		num = RSA.step2(env._p, env._q, env._r, env._s)
 		env._n 		= num[0]
 		env._m 		= num[1]
-		env._phi 	= num[2]#(env._e * env._d) - 1#num[2]
+		env._phi 	= num[2]
 		env._lambda	= num[3]
 		print("n =\t\t%d, No. of Digits: %d"%(env._n, getDigits(env._n)))
 		print("m =\t\t%d, No. of Digits: %d"%(env._m, getDigits(env._m)))
@@ -122,12 +126,16 @@ def step3():
 def step4():
 	"""Step 4: Compute secret exponentd, such that (e x d)mod phi=1 [1<d<phi]"""
 	print(white("\nExecuting step 4 of algorithm"))
-	env._d = randint(1, env._phi)
-	x = f_mod((env._e*env._d), env._phi)
-	while x==1:
-		env._d = randint(1, env._phi)
-		x = f_mod((env._e*env._d), env._phi)
-	print("d =\t%d"%(env._d))
+	# env._d = randint(1, env._phi)
+	# x = t_mod(mul(env._e, env._d), env._phi)
+	# while x!=1:
+	# 	env._d = randint(1, env._phi)
+	# 	x = t_mod(mul(env._e, env._d), env._phi)
+	# 	print ("x=%d"%x)
+	n = randint(1, env._e)
+	env._d = RSA.modinv(env._e, env._phi)
+	print ("d:\t %d"%env._d)
+	print ("(d*e) mod phi = %d"%((env._d*env._e)%env._phi))
 
 @task
 def step5():
@@ -147,18 +155,26 @@ def step6():
 def encrypt():
 	print(white("Executing: Encrypting string"))
 	env._str2NumList = RSA.str2NumList(env.sample_string)
-	print(env._str2NumList)
-	print(RSA.numList2String(RSA.str2NumList(env.sample_string)))
-	# a = env._str2NumList[0]
-	# print a
-	# RSA.encrypt(env._g, a, env._e, env._n, env._m)
-	#print RSA.modularExp(2, 34, pow(10,10))
 	for num in env._str2NumList:
-		print RSA.encrypt(env._g, num, env._e, env._n, env._m) #(s, e, n, m)
+		env._encrypted.append(RSA.encrypt(env._g, num, env._e, env._n, env._m)) #(s, e, n, m)
+	for num in env._encrypted:
+		print num
+
+
+@task
+def decrypt():
+	# local("fab step1 step2 step3 step4 step5 step6")
+	print(white("Executing Step 1 of algorithm."))
+	for num in env._str2NumList:
+		env._decrypted.append(RSA.decrypt(num, env._lambda, env._m, env._d, env._mu, env._n))
+	# for num in env._str2NumList:
+	# 	print RSA.decrypt(num, env._lambda, env._m, env._d, env._mu, env._n)
+	for num in env._decrypted:
+		print num
 
 @task
 def test():
-	p
+	pass
 
 def getDigits(num): 
 	i = 0

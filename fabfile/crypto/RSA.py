@@ -4,6 +4,7 @@ from random import randint
 import gmpy2
 from gmpy2 import *
 from datetime import datetime
+import math
 
 		
 def seed():
@@ -20,10 +21,10 @@ def getRandom():
 	return mersenne.retRandom(seed())
 
 def step2(p, q, r, s):
-	_n 		= p*q
-	_m 		= r*s
-	_phi 	= (p-1) * (q-1)
-	_lambda	= (r-1) * (s-1)
+	_n 		= mul(p,q)
+	_m 		= mul(r,s)
+	_phi 	= mul((p-1),(q-1))
+	_lambda	= mul((r-1),(s-1))
 	return (_n, _m, _phi, _lambda)
 
 
@@ -45,8 +46,6 @@ def modinv(a, m):
 
 """Euclid's algorithm to find GCD: http://en.wikipedia.org/wiki/Euclidean_algorithm"""
 def GCD(a, b):
-	a = 12
-	b = 4
 	while a!=b:
 		if a>b:
 			a -= b
@@ -62,8 +61,14 @@ def numList2String(l):
 	"""Converts a list of integers to a string bsed on ASCII values"""
 	return ''.join(map(chr, l))
 
+def generateLargePrime(p):
+	n = (gmpy2.xmpz(getRandom())**gmpy2.xmpz(p))+(gmpy2.xmpz(getRandom())**gmpy2.xmpz(p)-1)
+	while not miller_rabin.millerRabin(n, 2):
+		n = (gmpy2.xmpz(getRandom())**gmpy2.xmpz(p))+(gmpy2.xmpz(getRandom())**gmpy2.xmpz(p)-1)
+	return n
+
 def encrypt(_g, _s, _e, _n, _m):
-	r = gmpy2.mpz(randint(3, _m))
+	r = gmpy2.mpz(randint(3, _m-1))
 	g = gmpy2.mpz(_g)
 	s = gmpy2.mpz(_s)
 	e = gmpy2.mpz(_e)
@@ -72,7 +77,25 @@ def encrypt(_g, _s, _e, _n, _m):
 
 	s_e_mod_n 	= pow(s, e, n) 
 	r_m = pow(r, m, m*m)
+	# e_mod_n = gmpy2.mpz(f_mod(e, n))
+	# m_e_mod_n = m**e_mod_n
+	# return m_e_mod_n
 	return s_e_mod_n * r_m
+
+def decrypt(_c, _lambda, _m, _d, _mu, _n):
+	c = gmpy2.mpz(_c)
+	lmda = gmpy2.mpz(_lambda)
+	m = gmpy2.mpz(_m)
+	d = gmpy2.mpz(_d)
+	mu = gmpy2.mpz(_mu)
+	n = gmpy2.mpz(_n)
+	
+	c_lambda_m = pow(c, lmda, m**2-1)
+	# c_lambda_m -= 1
+	c_lambda_m /= m
+	c_lambda_m *= f_mod(mu, m)
+	c_lambda_m = pow(c_lambda_m, d, n)
+	return c_lambda_m
 
 """http://www.wojtekrj.net/2008/09/pythonalgorithms-fast-modular-exponentiation-script/"""
 def modularExp(a, n, m):
