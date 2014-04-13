@@ -75,12 +75,14 @@ def encrypt(_g, _s, _e, _n, _m):
 	n = gmpy2.mpz(_n)
 	m = gmpy2.mpz(_m)
 
-	s_e_mod_n 	= pow(s, e, n) 
-	r_m = pow(r, m, m*m)
-	# e_mod_n = gmpy2.mpz(f_mod(e, n))
-	# m_e_mod_n = m**e_mod_n
-	# return m_e_mod_n
-	return s_e_mod_n * r_m
+	# b1 = f_mod(e, n)
+	# b2 = pow(m, b1)
+	# b1 = pow(m, e)
+	# b2 = f_mod(b1, n)
+	b3 = pow(g, pow(m, f_mod(e, n)))
+
+	# c2 = f_mod(pow(r, m), pow(m, 2))
+	return b3
 
 def decrypt(_c, _lambda, _m, _d, _mu, _n):
 	c = gmpy2.mpz(_c)
@@ -90,12 +92,18 @@ def decrypt(_c, _lambda, _m, _d, _mu, _n):
 	mu = gmpy2.mpz(_mu)
 	n = gmpy2.mpz(_n)
 	
-	c_lambda_m = pow(c, lmda, m**2-1)
-	# c_lambda_m -= 1
-	c_lambda_m /= m
-	c_lambda_m *= f_mod(mu, m)
-	c_lambda_m = pow(c_lambda_m, d, n)
-	return c_lambda_m
+	b1 = f_mod(pow(c, lmda), (pow(m,2)-1))
+	b2 = b1/m
+	mu_mod_m = f_mod(mu, m)
+	b3 = f_mod(pow(mul(b2, mu_mod_m), d), n)
+	# c_lambda_m = c**lmda % m**2 -1
+	# # c_lambda_m -= 1
+	# c_lambda_m /= m
+	# c_lambda_m *= mu % m
+	# c_lambda_m = c_lambda_m**d
+	# c_lambda_m %= n
+	# return c_lambda_m
+	return b3
 
 """http://www.wojtekrj.net/2008/09/pythonalgorithms-fast-modular-exponentiation-script/"""
 def modularExp(a, n, m):
@@ -123,3 +131,18 @@ def expo(u, m):
 	current = current * current
 	q = q/2
 	return prod
+
+# modInv 2
+def extEuclideanAlg(a, b):
+	if b==0:
+		return 1, 0, a
+	else:
+		x, y, gcd = extEuclideanAlg(b, a%b)
+		return y, x-y*(a//b), gcd
+
+def modInvEuclid(a, m):
+	x, y, gcd = extEuclideanAlg(a, m)
+	if gcd==1:
+		return x%m
+	else:
+		return None
