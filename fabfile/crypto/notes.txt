@@ -4,3 +4,4 @@
 4. http://logos.cs.uic.edu/340%20Notes/rsa.html explaination
 5. http://prezi.com/enwwovnoujuq/modified-rsa-encryption-algorithm-mrea/
 6. Multiplicative Inverse: http://numericalrecipes.wordpress.com/tag/modular-multiplicative-inverse/
+7. fast multiplication: http://python.dzone.com/articles/algorithm-week-karatsuba-fast

@@ -68,41 +68,36 @@ def generateLargePrime(p):
 	return n
 
 def encrypt(_g, _s, _e, _n, _m):
-	r = gmpy2.mpz(randint(3, _m-1))
-	g = gmpy2.mpz(_g)
-	s = gmpy2.mpz(_s)
-	e = gmpy2.mpz(_e)
-	n = gmpy2.mpz(_n)
-	m = gmpy2.mpz(_m)
+	r = 1#gmpy2.xmpz(1)
+	g = _g #gmpy2.xmpz(_g)
+	s = _s #gmpy2.xmpz(_s)
+	e = _e#gmpy2.xmpz(_e)
+	n = _n#gmpy2.xmpz(_n)
+	m = _m#gmpy2.xmpz(_m)
 
-	# b1 = f_mod(e, n)
-	# b2 = pow(m, b1)
+	b1 = f_mod(e, n)
+	b2 = pow(m, b1)
+	b3 = pow(g, b2)*f_mod(pow(r, m), pow(m,2))
+	# b3 = gmpy2.xmpz(pow(g, b2))
 	# b1 = pow(m, e)
 	# b2 = f_mod(b1, n)
-	b3 = pow(g, pow(m, f_mod(e, n)))
+	# b3 = pow(g, pow(m, f_mod(e, n)))
 
 	# c2 = f_mod(pow(r, m), pow(m, 2))
 	return b3
 
 def decrypt(_c, _lambda, _m, _d, _mu, _n):
-	c = gmpy2.mpz(_c)
-	lmda = gmpy2.mpz(_lambda)
-	m = gmpy2.mpz(_m)
-	d = gmpy2.mpz(_d)
-	mu = gmpy2.mpz(_mu)
-	n = gmpy2.mpz(_n)
+	c = gmpy2.xmpz(_c)
+	lmda = gmpy2.xmpz(_lambda)
+	m = gmpy2.xmpz(_m)
+	d = gmpy2.xmpz(_d)
+	mu = gmpy2.xmpz(_mu)
+	n = gmpy2.xmpz(_n)
 	
 	b1 = f_mod(pow(c, lmda), (pow(m,2)-1))
-	b2 = b1/m
+	b2 = div(b1, m)
 	mu_mod_m = f_mod(mu, m)
 	b3 = f_mod(pow(mul(b2, mu_mod_m), d), n)
-	# c_lambda_m = c**lmda % m**2 -1
-	# # c_lambda_m -= 1
-	# c_lambda_m /= m
-	# c_lambda_m *= mu % m
-	# c_lambda_m = c_lambda_m**d
-	# c_lambda_m %= n
-	# return c_lambda_m
 	return b3
 
 """http://www.wojtekrj.net/2008/09/pythonalgorithms-fast-modular-exponentiation-script/"""
@@ -133,6 +128,7 @@ def expo(u, m):
 	return prod
 
 # modInv 2
+# 
 def extEuclideanAlg(a, b):
 	if b==0:
 		return 1, 0, a
@@ -146,3 +142,72 @@ def modInvEuclid(a, m):
 		return x%m
 	else:
 		return None
+
+# Second RSA
+p = 0
+q = 0
+n=0
+phi = 0
+e = 0
+d = 0
+m = 133
+c = 0
+drc = 0
+def selectPrime():
+	global p
+	global q
+	global n
+	global phi
+	global e
+	global d
+	global m
+	global c
+	global drc
+	p = getRandom()
+	while not miller_rabin.millerRabin(p, 2):
+		p = getRandom()
+	q = getRandom()
+	while not miller_rabin.millerRabin(q, 2):
+		q = getRandom()
+	n = mul(p, q)
+	phi = (p-1) * (q-1)
+	e = getRandom()
+	while gcd(e, phi)!=1:
+		e=getRandom()
+	d = divm(1, e, phi)
+	c = pow(m, e, n)
+	drc = pow(c, d, n)
+
+
+# selectPrime()
+# print "p: %d"%p
+# print "q: %d"%q
+# print "n: %d"%n
+# print "phi: %d"%phi
+# print "e: %d"%e
+# print "d: %d"%d
+# print "message: %d"%m
+# print "cipher: %d"%c
+# print "decrypted: %d"%drc
+
+			# Karatsuba multiplication #
+			
+_CUTOFF = 1536
+
+def k_multiply(x, y):
+	if x.bit_length()<= _CUTOFF or y.bit_length <= _CUTOFF:
+		return x*y
+	else:
+		n 		= max(b.bit_length(), y.bit_length)
+		half 	= (n+32) // mul(64, 32)
+		mask 	= (1 << half) - 1
+		xlow 	= x & mask
+		ylow 	= y & mask
+		xhigh 	= x >> half
+		yhigh 	= y >> half
+
+		a 		= k_multiply(xhigh, yhigh)
+		b 		= k_multiply(xlow + xhigh, ylow + yhigh)
+		c 		= k_multiply(xlow, ylow)
+		d 		= b - a - c
+		return (((a << half) + d) << half) + c
