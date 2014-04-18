@@ -21,7 +21,7 @@ env._p 		= 29
 env._q 		= 31
 env._r 		= 37
 env._s 		= 41
-
+env.allNUmbers = []
 # Step 2
 env._n 		= 0
 env._m 		= 0
@@ -55,7 +55,7 @@ def getRandomNumber():
 @task
 def MREA():
 	""": Run MREA algorithm"""
-	local("fab step1 step2 step3 step4 step5 step6 encrypt")
+	local("fab step1 step2 step3 step4 step5 step6 encrypt decrypt")
 
 @task
 def step1():
@@ -63,18 +63,23 @@ def step1():
 	"""
 	print(white("Executing Step 1 of algorithm."))
 	env._p = generateLargePrime(env.digitParameter)
-	while bit_length(env._q) != bit_length(env._p):
+	env.allNUmbers.append(env._p)
+	while bit_length(env._q) != bit_length(env._p) and env._q not in env.allNUmbers:
 		env._q = generateLargePrime(env.digitParameter)
+	env.allNUmbers.append(env._q)
 
-	while bit_length(env._r) != bit_length(env._p):
+	while bit_length(env._r) != bit_length(env._p) and env._r not in env.allNUmbers:
 		env._r = generateLargePrime(env.digitParameter)
+	env.allNUmbers.append(env._r)
 
-	while bit_length(env._s) != bit_length(env._p):
+	while bit_length(env._s) != bit_length(env._p) and env._s not in env.allNUmbers:
 		env._s = generateLargePrime(env.digitParameter)
+	env.allNUmbers.append(env._s)
 	print("p = %d, Size: %d"%(env._p, bit_length(env._p)))
 	print("q = %d, Size: %d"%(env._q, bit_length(env._q)))
 	print("r = %d, Size: %d"%(env._r, bit_length(env._r)))
 	print("s = %d, Size: %d"%(env._s, bit_length(env._s)))
+	print(env.allNUmbers)
 
 @task	
 def step2():
@@ -215,9 +220,9 @@ def getDigits(num):
 
 def generateLargePrime(p):
 	# n = (gmpy2.xmpz(RSA.getRandom())**gmpy2.xmpz(p))+(gmpy2.xmpz(RSA.getRandom())**gmpy2.xmpz(p)-1)
-	n = randint(1, 100)
+	n = randint(1, 1000)
 	while not miller_rabin.millerRabin(n, 2):
 		# n = (gmpy2.xmpz(RSA.getRandom())**gmpy2.xmpz(p))+(gmpy2.xmpz(RSA.getRandom())**gmpy2.xmpz(p)-1)
-		n = randint(1, 100)
+		n = randint(1, 1000)
 	return n
 

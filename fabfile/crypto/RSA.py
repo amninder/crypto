@@ -104,7 +104,7 @@ def decrypt(_c, _lambda, _m, _d, _mu, _n):
 	# mu_mod_m = f_mod(mu, m)
 	# b3 = f_mod(pow(mul(b2, mu_mod_m), d), n)
 	b3 = pow(b2, d)
-	print b3
+	# print b3
 	b3 = f_mod(b3, n)
 	return b3
 
