@@ -17,10 +17,10 @@ b = gmpy2.xmpz(500)
 env.digitParameter = a
 env.sample_string = " "
 # Step 1
-env._p 		= 11
-env._q 		= 13
-env._r 		= 17
-env._s 		= 19
+env._p 		= 29
+env._q 		= 31
+env._r 		= 37
+env._s 		= 41
 
 # Step 2
 env._n 		= 0
@@ -105,11 +105,13 @@ def step2():
 def step3():
 	"""Step 3: Choose an integer e, such that GCD(e, phi)=1"""
 	print(white("\nExecuting step 3 of algorithm"))
-	env._e 	= 23
-	# env._e = generateLargePrime(env.digitParameter)
+	# env._e 	= 47
+	env._e = generateLargePrime(env.digitParameter)
+	# env._e = randrange(20, 100)
 	x = gcd(env._e, env._phi)
 	while x!=1:
 		env._e = generateLargePrime(env.digitParameter)
+		# env._e = randrange(20, 100)
 		x = gcd(env._e, env._phi)
 		# print("GCD(%d, %d)=%d"%(env._e, env._phi, x))
 	print(white("GCD(%d, %d) = %d"%(env._e, env._phi, x)))
@@ -142,13 +144,17 @@ def step6():
 @task
 def encrypt():
 	print(white("Executing: Encrypting string"))
-	env._str2NumList = RSA.str2NumList(env.sample_string)
-	print env._str2NumList
-	for num in env._str2NumList:
+	# env._str2NumList = RSA.str2NumList(env.sample_string)
+	# print env._str2NumList
+	# for num in env._str2NumList:
+	# # for num in env._encrypted:
+	# 	env._encrypted.append(RSA.encrypt(env._g, num, env._e, env._n, env._m)) #(s, e, n, m)
 	# for num in env._encrypted:
-		env._encrypted.append(RSA.encrypt(env._g, num, env._e, env._n, env._m)) #(s, e, n, m)
-	for num in env._encrypted:
-		print num
+	# 	print num
+	cc = 32
+	print("Message: %d"%cc)
+	env.c = RSA.encrypt(env._g, cc, env._e, env._n, env._m)
+	print("Cipher: %d"%env.c)
 
 
 @task
@@ -157,10 +163,11 @@ def decrypt():
 	print(white("Executing: Decryption."))
 	# for num in env._encrypted:
 	# 	env._decrypted.append(RSA.decrypt(num, env._lambda, env._m, env._d, env._mu, env._n))
-	for num in env._str2NumList:
-		print RSA.decrypt(num, env._lambda, env._m, env._d, env._mu, env._n)
-	for num in env._decrypted:
-		print num
+	# for num in env._str2NumList:
+	# 	print RSA.decrypt(num, env._lambda, env._m, env._d, env._mu, env._n)
+	# for num in env._decrypted:
+	# 	print num
+	print("Decrypted: %d"%RSA.decrypt(env.c, env._lambda, env._m, env._d, env._mu, env._n))
 
 @task
 def rsa():
@@ -205,11 +212,12 @@ def getDigits(num):
 		num /= 10
 	return i
 
+
 def generateLargePrime(p):
-	n = (gmpy2.xmpz(RSA.getRandom())**gmpy2.xmpz(p))+(gmpy2.xmpz(RSA.getRandom())**gmpy2.xmpz(p)-1)
-	# n = randint(1, 100)
+	# n = (gmpy2.xmpz(RSA.getRandom())**gmpy2.xmpz(p))+(gmpy2.xmpz(RSA.getRandom())**gmpy2.xmpz(p)-1)
+	n = randint(1, 100)
 	while not miller_rabin.millerRabin(n, 2):
-		n = (gmpy2.xmpz(RSA.getRandom())**gmpy2.xmpz(p))+(gmpy2.xmpz(RSA.getRandom())**gmpy2.xmpz(p)-1)
-		# n = randint(1, 100)
+		# n = (gmpy2.xmpz(RSA.getRandom())**gmpy2.xmpz(p))+(gmpy2.xmpz(RSA.getRandom())**gmpy2.xmpz(p)-1)
+		n = randint(1, 100)
 	return n
 
