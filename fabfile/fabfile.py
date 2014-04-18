@@ -17,10 +17,10 @@ b = gmpy2.xmpz(500)
 env.digitParameter = a
 env.sample_string = " "
 # Step 1
-env._p 		= 2
-env._q 		= 3
-env._r 		= 5
-env._s 		= 7
+env._p 		= 11
+env._q 		= 13
+env._r 		= 17
+env._s 		= 19
 
 # Step 2
 env._n 		= 0
@@ -105,7 +105,7 @@ def step2():
 def step3():
 	"""Step 3: Choose an integer e, such that GCD(e, phi)=1"""
 	print(white("\nExecuting step 3 of algorithm"))
-	env._e 	= 11
+	env._e 	= 23
 	# env._e = generateLargePrime(env.digitParameter)
 	x = gcd(env._e, env._phi)
 	while x!=1:

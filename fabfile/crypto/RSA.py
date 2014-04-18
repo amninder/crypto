@@ -69,7 +69,7 @@ def generateLargePrime(p):
 	return n
 
 def encrypt(_g, _s, _e, _n, _m):
-	r = gmpy2.xmpz(23)
+	r = gmpy2.xmpz(29)
 	g = gmpy2.xmpz(_g)
 	s = gmpy2.xmpz(_s)
 	e = gmpy2.xmpz(_e)
