@@ -1,5 +1,4 @@
 from random import *
-import gmpy2
 from gmpy2 import *
 
 def millerRabin(n, k=3):

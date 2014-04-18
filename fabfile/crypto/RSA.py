@@ -1,6 +1,7 @@
 import miller_rabin
 import mersenne
 from random import randint
+from fabric.colors import *
 import gmpy2
 from gmpy2 import *
 from datetime import datetime
@@ -68,23 +69,25 @@ def generateLargePrime(p):
 	return n
 
 def encrypt(_g, _s, _e, _n, _m):
-	r = 1#gmpy2.xmpz(1)
-	g = _g #gmpy2.xmpz(_g)
-	s = _s #gmpy2.xmpz(_s)
-	e = _e#gmpy2.xmpz(_e)
-	n = _n#gmpy2.xmpz(_n)
-	m = _m#gmpy2.xmpz(_m)
+	r = gmpy2.xmpz(23)
+	g = gmpy2.xmpz(_g)
+	s = gmpy2.xmpz(_s)
+	e = gmpy2.xmpz(_e)
+	n = gmpy2.xmpz(_n)
+	m = gmpy2.xmpz(_m)
 
 	b1 = f_mod(e, n)
-	b2 = pow(m, b1)
-	b3 = pow(g, b2)*f_mod(pow(r, m), pow(m,2))
+	print(white("e mod n = %d"%b1))
+	b2 = pow(s, b1)
+	b2 = mul(b2, f_mod(pow(r,m), pow(m, 2)))
+	# b3 = pow(g, b2)*f_mod(pow(r, m), pow(m,2))
 	# b3 = gmpy2.xmpz(pow(g, b2))
 	# b1 = pow(m, e)
 	# b2 = f_mod(b1, n)
 	# b3 = pow(g, pow(m, f_mod(e, n)))
 
 	# c2 = f_mod(pow(r, m), pow(m, 2))
-	return b3
+	return b2
 
 def decrypt(_c, _lambda, _m, _d, _mu, _n):
 	c = gmpy2.xmpz(_c)
@@ -95,9 +98,12 @@ def decrypt(_c, _lambda, _m, _d, _mu, _n):
 	n = gmpy2.xmpz(_n)
 	
 	b1 = f_mod(pow(c, lmda), (pow(m,2)-1))
-	b2 = div(b1, m)
-	mu_mod_m = f_mod(mu, m)
-	b3 = f_mod(pow(mul(b2, mu_mod_m), d), n)
+	print ("b1: %d"%b1)
+	b2 = mul(div(b1, m),f_mod(mu, m))
+	print ("b2: %d"%b2)
+	# mu_mod_m = f_mod(mu, m)
+	# b3 = f_mod(pow(mul(b2, mu_mod_m), d), n)
+	b3 = f_mod(pow(b2,d), n)
 	return b3
 
 """http://www.wojtekrj.net/2008/09/pythonalgorithms-fast-modular-exponentiation-script/"""

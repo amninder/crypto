@@ -15,7 +15,7 @@ a = gmpy2.xmpz(1) # use 4 for good result
 b = gmpy2.xmpz(500)
 
 env.digitParameter = a
-env.sample_string = "A"
+env.sample_string = " "
 # Step 1
 env._p 		= 2
 env._q 		= 3
@@ -42,6 +42,7 @@ env._mu 	= 0
 
 env._encrypted = []
 env._decrypted = []
+env._c 		= 0
 
 @task
 def getRandomNumber():
@@ -79,10 +80,6 @@ def step1():
 def step2():
 	"""STEP 2: generate another four numbers from numbers generated from Step 1."""
 	print(white("Executing step 2 of algorithm"))
-	print("Size of p:\t%d"%bit_length(env._p))
-	print("Size of q:\t%d"%bit_length(env._q))
-	print("Size of r:\t%d"%bit_length(env._r))
-	print("Size of s:\t%d"%bit_length(env._s))
 	try:
 		assert env._p !=0
 		assert env._q !=0
@@ -108,14 +105,14 @@ def step2():
 def step3():
 	"""Step 3: Choose an integer e, such that GCD(e, phi)=1"""
 	print(white("\nExecuting step 3 of algorithm"))
-	# env._e 	= 11
-	env._e = generateLargePrime(env.digitParameter)
+	env._e 	= 11
+	# env._e = generateLargePrime(env.digitParameter)
 	x = gcd(env._e, env._phi)
 	while x!=1:
 		env._e = generateLargePrime(env.digitParameter)
 		x = gcd(env._e, env._phi)
 		# print("GCD(%d, %d)=%d"%(env._e, env._phi, x))
-	print("GCD(%d, %d) = %d"%(env._e, env._phi, x))
+	print(white("GCD(%d, %d) = %d"%(env._e, env._phi, x)))
 	print("e =\t%d, Size: %d"%(env._e, bit_length(env._e)))
 
 @task
@@ -123,10 +120,10 @@ def step4():
 	"""Step 4: Compute secret exponentd, such that (e x d)mod phi=1 [1<d<phi]"""
 	print(white("\nExecuting step 4 of algorithm"))
 	# n = randint(1, env._e)
-	env._d = divm(1,env._e , env._lambda)
+	env._d = divm(1,env._e , env._phi)
 	# env._d = RSA.modinv(float(env._e/(1+(n*env._phi))), env._phi)
 	print ("d:\t %d, Size: %d"%(env._d, bit_length(env._d)))
-	print ("(d*e) mod phi = %d"%((env._d*env._e)%env._lambda))
+	print ("(d*e) mod phi = %d"%((env._d*env._e)%env._phi))
 
 @task
 def step5():
@@ -166,8 +163,40 @@ def decrypt():
 		print num
 
 @task
-def test():
-	pass
+def rsa():
+	""": RSA Algorithm to encrypt and decrypt"""
+	env._p = generateLargePrime(env.digitParameter)
+	print("p = %d, Size: %d"%(env._p, bit_length(env._p)))
+
+	while bit_length(env._q) != bit_length(env._p):
+		env._q = generateLargePrime(env.digitParameter)
+	print("q = %d, Size: %d"%(env._q, bit_length(env._q)))
+
+	env._n = mul(env._p, env._q)
+	print("n = %d, Size: %d"%(env._n, bit_length(env._n)))
+
+	env._phi = mul(env._p-1, env._q-1)
+	print("phi = %d, Size: %d"%(env._phi, bit_length(env._phi)))
+
+	env._e = generateLargePrime(env.digitParameter)
+	x = gcd(env._e, env._phi)
+	while x!=1:
+		env._e = generateLargePrime(env.digitParameter)
+		x = gcd(env._e, env._phi)
+		# print("GCD(%d, %d)=%d"%(env._e, env._phi, x))
+	print("e = %d, Size: %d"%(env._e, bit_length(env._e)))
+	print(red("GCD(%d, %d) = %d"%(env._e, env._phi, x)))
+
+	env._d = divm(1,env._e , env._phi)
+	print ("d = %d, Size: %d"%(env._d, bit_length(env._d)))
+	print ("(d*e) mod phi = %d"%((env._d*env._e)%env._phi))
+
+	print("Message: %d"%133)
+	env._c = pow(133, env._e, env._n)
+	print(white("Cipher: %d"%env._c))
+
+	m = pow(env._c, env._d, env._n)
+	print(white("Decryted Text: %d"%m))
 
 def getDigits(num): 
 	i = 0
