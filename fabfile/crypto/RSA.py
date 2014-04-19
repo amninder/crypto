@@ -91,7 +91,8 @@ def decrypt(_c, _lambda, _m, _d, _mu, _n):
 	mu 		= gmpy2.xmpz(_mu)
 	n 		= gmpy2.xmpz(_n)
 	
-	b1 = (((pow(c, lmda) % (m**2)-1)/m) * mu % m)**d % n
+
+	b1 = f_mod(pow((f_mod(mul((((pow(c, lmda) % (pow(m, 2))-1))/m), mu), m)),d), n)
 	return b1
 
 """http://www.wojtekrj.net/2008/09/pythonalgorithms-fast-modular-exponentiation-script/"""

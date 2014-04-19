@@ -11,7 +11,7 @@ from gmpy2 import *
 import gmpy2
 import sys
 
-a = gmpy2.xmpz(1) # use 4 for good result
+a = gmpy2.xmpz(3) # use 4 for good result
 b = gmpy2.xmpz(500)
 
 env.digitParameter = a
@@ -59,27 +59,26 @@ def MREA():
 
 @task
 def step1():
-	"""STEP 1: get p, q, r, s. All are Primes and of same length.
+	""": STEP 1 - get p, q, r, s. All are Primes and of same length.
 	"""
 	print(white("Executing Step 1 of algorithm."))
-	env._p = generateLargePrime(env.digitParameter)
+	env._p = generatePrime()
 	env.allNUmbers.append(env._p)
 	while bit_length(env._q) != bit_length(env._p) and env._q not in env.allNUmbers:
-		env._q = generateLargePrime(env.digitParameter)
+		env._q = generatePrime()
 	env.allNUmbers.append(env._q)
 
 	while bit_length(env._r) != bit_length(env._p) and env._r not in env.allNUmbers:
-		env._r = generateLargePrime(env.digitParameter)
+		env._r = generatePrime()
 	env.allNUmbers.append(env._r)
 
 	while bit_length(env._s) != bit_length(env._p) and env._s not in env.allNUmbers:
-		env._s = generateLargePrime(env.digitParameter)
+		env._s = generatePrime()
 	env.allNUmbers.append(env._s)
 	print("p = %d, Size: %d"%(env._p, bit_length(env._p)))
 	print("q = %d, Size: %d"%(env._q, bit_length(env._q)))
 	print("r = %d, Size: %d"%(env._r, bit_length(env._r)))
 	print("s = %d, Size: %d"%(env._s, bit_length(env._s)))
-	print(env.allNUmbers)
 
 @task	
 def step2():
@@ -111,11 +110,11 @@ def step3():
 	"""Step 3: Choose an integer e, such that GCD(e, phi)=1"""
 	print(white("\nExecuting step 3 of algorithm"))
 	# env._e 	= 47
-	env._e = generateLargePrime(env.digitParameter)
+	env._e = generatePrime()
 	# env._e = randrange(20, 100)
 	x = gcd(env._e, env._phi)
 	while x!=1:
-		env._e = generateLargePrime(env.digitParameter)
+		env._e = generatePrime()
 		# env._e = randrange(20, 100)
 		x = gcd(env._e, env._phi)
 		# print("GCD(%d, %d)=%d"%(env._e, env._phi, x))
@@ -129,8 +128,8 @@ def step4():
 	# n = randint(1, env._e)
 	env._d = divm(1,env._e , env._phi)
 	# env._d = RSA.modinv(float(env._e/(1+(n*env._phi))), env._phi)
-	print ("d:\t %d, Size: %d"%(env._d, bit_length(env._d)))
-	print ("(d*e) mod phi = %d"%((env._d*env._e)%env._phi))
+	print ("d = %d, Size: %d"%(env._d, bit_length(env._d)))
+	print ("(%d*%d) mod %d = %d"%(env._e, env._d, env._phi, (env._d*env._e)%env._phi))
 
 @task
 def step5():
@@ -159,7 +158,7 @@ def encrypt():
 	cc = 1
 	print("Message: %d"%cc)
 	env.c = RSA.encrypt(env._g, cc, env._e, env._n, env._m)
-	print("Cipher: %d"%env.c)
+	print("Cipher Text: %d"%env.c)
 
 
 @task
@@ -172,7 +171,7 @@ def decrypt():
 	# 	print RSA.decrypt(num, env._lambda, env._m, env._d, env._mu, env._n)
 	# for num in env._decrypted:
 	# 	print num
-	print("Decrypted: %d"%RSA.decrypt(env.c, env._lambda, env._m, env._d, env._mu, env._n))
+	print("Decrypted Text: %d"%RSA.decrypt(env.c, env._lambda, env._m, env._d, env._mu, env._n))
 
 @task
 def rsa():
@@ -218,11 +217,14 @@ def getDigits(num):
 	return i
 
 
-def generateLargePrime(p):
-	# n = (gmpy2.xmpz(RSA.getRandom())**gmpy2.xmpz(p))+(gmpy2.xmpz(RSA.getRandom())**gmpy2.xmpz(p)-1)
+def generatePrime():
 	n = randint(1, 1000)
 	while not miller_rabin.millerRabin(n, 2):
-		# n = (gmpy2.xmpz(RSA.getRandom())**gmpy2.xmpz(p))+(gmpy2.xmpz(RSA.getRandom())**gmpy2.xmpz(p)-1)
 		n = randint(1, 1000)
 	return n
 
+def generateLargePrime(p):
+	n = (gmpy2.xmpz(RSA.getRandom())**gmpy2.xmpz(p))+(gmpy2.xmpz(RSA.getRandom())**gmpy2.xmpz(p)-1)
+	while not miller_rabin.millerRabin(n, 2):
+		n = (gmpy2.xmpz(RSA.getRandom())**gmpy2.xmpz(p))+(gmpy2.xmpz(RSA.getRandom())**gmpy2.xmpz(p)-1)
+	return n

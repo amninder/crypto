@@ -5,3 +5,36 @@
 5. http://prezi.com/enwwovnoujuq/modified-rsa-encryption-algorithm-mrea/
 6. Multiplicative Inverse: http://numericalrecipes.wordpress.com/tag/modular-multiplicative-inverse/
 7. fast multiplication: http://python.dzone.com/articles/algorithm-week-karatsuba-fast
+
+
+
+
+Sample result:
+
+Executing Step 1 of algorithm.
+p = 47, Size: 6
+q = 53, Size: 6
+r = 37, Size: 6
+s = 41, Size: 6
+Executing step 2 of algorithm
+n =		2491, Size: 12
+m =		1517, Size: 11
+phi =		2392, Size: 12
+lambda =	1440, Size: 11
+
+Executing step 3 of algorithm
+GCD(5, 2392) = 1
+e =	5, Size: 3
+
+Executing step 4 of algorithm
+d = 957, Size: 10
+(5*957) mod 2392 = 1
+Executing step 5 of algorithm
+g =	1518, Size: 11
+Executing Step 6 of algorithm
+mu =	197, Size: 8
+Executing: Encrypting string
+Message: 2
+Cipher: 631970330837718701152790397203923023185249138621115316763266415036463240649380914366454404094074290176
+Executing: Decryption.
+Decrypted: 2
