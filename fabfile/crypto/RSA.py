@@ -69,6 +69,7 @@ def generateLargePrime(p):
 	return n
 
 def encrypt(_g, _s, _e, _n, _m):
+	"""C = (g^(M^(e mod n)))*((r^m)*mod (m^2))"""
 	r = gmpy2.xmpz(1)
 	g = gmpy2.xmpz(_g)
 	s = gmpy2.xmpz(_s)
@@ -77,36 +78,21 @@ def encrypt(_g, _s, _e, _n, _m):
 	m = gmpy2.xmpz(_m)
 
 	b1 = f_mod(e, n)
-	b2 = pow(s, b1)
-	b2 = mul(b2, f_mod(pow(r,m), pow(m, 2)))
-	# b3 = pow(g, b2)*f_mod(pow(r, m), pow(m,2))
-	# b3 = gmpy2.xmpz(pow(g, b2))
-	# b1 = pow(m, e)
-	# b2 = f_mod(b1, n)
-	# b3 = pow(g, pow(m, f_mod(e, n)))
-
-	# c2 = f_mod(pow(r, m), pow(m, 2))
-	return b2
+	b1 = pow(g, pow(s, b1))
+	b1 = mul(b1, f_mod(pow(r,m), pow(m,2)))
+	return b1
 
 def decrypt(_c, _lambda, _m, _d, _mu, _n):
-	c = gmpy2.xmpz(_c)
-	lmda = gmpy2.xmpz(_lambda)
-	m = gmpy2.xmpz(_m)
-	d = gmpy2.xmpz(_d)
-	mu = gmpy2.xmpz(_mu)
-	n = gmpy2.xmpz(_n)
+	""" (M) = (((C^lambda mod (m^2)-1)/m)*mu mod m)^d mod n"""
+	c 		= gmpy2.xmpz(_c)
+	lmda 	= gmpy2.xmpz(_lambda)
+	m 		= gmpy2.xmpz(_m)
+	d 		= gmpy2.xmpz(_d)
+	mu 		= gmpy2.xmpz(_mu)
+	n 		= gmpy2.xmpz(_n)
 	
-	b1 = f_mod(pow(c, lmda), (pow(m,2)-1))/m
-	print("b1: %d"%b1)
-	# b2 = mul(div(b1, m),f_mod(mu, m))
-	b2 = mul(b1, f_mod(mu, m))
-	print("b2: %d"%b2)
-	# mu_mod_m = f_mod(mu, m)
-	# b3 = f_mod(pow(mul(b2, mu_mod_m), d), n)
-	b3 = pow(b2, d)
-	# print b3
-	b3 = f_mod(b3, n)
-	return b3
+	b1 = (((pow(c, lmda) % (m**2)-1)/m) * mu % m)**d % n
+	return b1
 
 """http://www.wojtekrj.net/2008/09/pythonalgorithms-fast-modular-exponentiation-script/"""
 def modularExp(a, n, m):

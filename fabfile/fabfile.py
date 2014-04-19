@@ -156,7 +156,7 @@ def encrypt():
 	# 	env._encrypted.append(RSA.encrypt(env._g, num, env._e, env._n, env._m)) #(s, e, n, m)
 	# for num in env._encrypted:
 	# 	print num
-	cc = 32
+	cc = 1
 	print("Message: %d"%cc)
 	env.c = RSA.encrypt(env._g, cc, env._e, env._n, env._m)
 	print("Cipher: %d"%env.c)
