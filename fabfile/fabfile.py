@@ -1,15 +1,12 @@
 # coding=utf-8
-from random import randrange, randint
+from random import randint
 from fabric.api import *
 from fabric.colors import *
 from fabric.operations import *
-from crypto import mersenne
 from crypto import miller_rabin
 from crypto import RSA
-from datetime import datetime
 from gmpy2 import *
 import gmpy2
-import sys
 
 a = gmpy2.xmpz(3) # use 4 for good result
 b = gmpy2.xmpz(500)
@@ -59,7 +56,7 @@ def MREA():
 
 @task
 def step1():
-	""": STEP 1 - get p, q, r, s. All are Primes and of same length.
+	"""STEP 1: get p, q, r, s. All are Primes and of same length.
 	"""
 	print(white("Executing Step 1 of algorithm."))
 	env._p = generatePrime()
@@ -209,6 +206,25 @@ def rsa():
 	m = pow(env._c, env._d, env._n)
 	print(white("Decryted Text: %d"%m))
 
+@task
+def test():
+	env._p = generatePrime()
+	env.allNUmbers.append(env._p)
+	while bit_length(env._q) != bit_length(env._p) and env._q not in env.allNUmbers:
+		env._q = generatePrime()
+	env.allNUmbers.append(env._q)
+	while bit_length(env._r)!= bit_length(env._p):
+		if env._r not in env.allNUmbers:
+			print env.allNUmbers
+			env._r = generatePrime()
+		else:
+			pass
+	env.allNUmbers.append(env._q)
+	print env.allNUmbers
+
+"""
+Some python codes
+"""
 def getDigits(num): 
 	i = 0
 	while num>0:

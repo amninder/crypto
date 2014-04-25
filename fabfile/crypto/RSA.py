@@ -1,11 +1,10 @@
 import miller_rabin
 import mersenne
-from random import randint
 from fabric.colors import *
 import gmpy2
 from gmpy2 import *
 from datetime import datetime
-import math
+
 
 		
 def seed():
@@ -22,10 +21,10 @@ def getRandom():
 	return mersenne.retRandom(seed())
 
 def step2(p, q, r, s):
-	_n 		= mul(p,q)
-	_m 		= mul(r,s)
-	_phi 	= mul((p-1),(q-1))
-	_lambda	= mul((r-1),(s-1))
+	_n      = mul(p,q)
+	_m      = mul(r,s)
+	_phi    = mul((p-1),(q-1))
+	_lambda = mul((r-1),(s-1))
 	return (_n, _m, _phi, _lambda)
 
 
