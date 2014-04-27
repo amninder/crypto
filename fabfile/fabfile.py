@@ -46,7 +46,6 @@ def getRandomNumber():
 	""": get random number based upon Miller Rabin Primality test"""
 
 	env._p = RSA.getRandomPrime()
-	env._p **= 521
 	print(white("%d"%env._p))
 
 @task
@@ -144,6 +143,9 @@ def step6():
 
 @task
 def encrypt():
+	"""
+	Encrypt: Encrypt Message
+	"""
 	print(white("Executing: Encrypting string"))
 	# env._str2NumList = RSA.str2NumList(env.sample_string)
 	# print env._str2NumList
@@ -160,6 +162,9 @@ def encrypt():
 
 @task
 def decrypt():
+	"""
+	Decrypt: Decrypt Message
+	"""
 	# local("fab step1 step2 step3 step4 step5 step6")
 	print(white("Executing: Decryption."))
 	# for num in env._encrypted:
@@ -208,6 +213,9 @@ def rsa():
 
 @task
 def plotTime():
+	"""
+		: Plot graph TIME Vs BYTES for Miller test
+	"""
 	from crypto import plots as plots
 	plots.plotGraphMiller()
 

@@ -13,7 +13,7 @@ def seed():
 def getRandomPrime():
 	n = mersenne.retRandom(seed())
 	if miller_rabin.millerRabin(n, 4):
-		return n**2
+		return n
 	else:
 		return getRandomPrime()
 

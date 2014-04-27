@@ -24,10 +24,10 @@ def plotGraphMiller():
 		n = plotMillerTime(param)
 		if n[1]>previous:
 			previous = n[1]
-			xar.append(n[1])
+			xar.append(n[1]/8)
 			yar.append(n[0])
 			print ("Time: %d"%n[0])
-			print ("Bytes: %d"%int(n[1]))
+			print ("Bytes: %d"%int(n[1]/8))
 			ax1.clear()
 			plt.xlabel('Bytes')
 			plt.ylabel('NanoSeconds')
