@@ -6,7 +6,7 @@ from gmpy2 import *
 from datetime import datetime
 
 
-		
+
 def seed():
 	return datetime.now().microsecond
 
@@ -28,7 +28,9 @@ def step2(p, q, r, s):
 	return (_n, _m, _phi, _lambda)
 
 
-"""Derived from Pseudocode: http://en.wikipedia.org/wiki/Extended_Euclidean_algorithm#Iterative_method_2"""
+"""
+Derived from Pseudocode: http://en.wikipedia.org/wiki/Extended_Euclidean_algorithm#Iterative_method_2
+"""
 def extended_gcd(aa, bb):
 	lastremainder, remainder = abs(aa), abs(bb)
 	x, lastx, y, lasty = 0, 1, 1, 0
@@ -44,7 +46,9 @@ def modinv(a, m):
 		raise ValueError
 	return x%m
 
-"""Euclid's algorithm to find GCD: http://en.wikipedia.org/wiki/Euclidean_algorithm"""
+"""
+Euclid's algorithm to find GCD: http://en.wikipedia.org/wiki/Euclidean_algorithm
+"""
 def GCD(a, b):
 	while a!=b:
 		if a>b:
@@ -83,15 +87,13 @@ def encrypt(_g, _s, _e, _n, _m):
 
 def decrypt(_c, _lambda, _m, _d, _mu, _n):
 	""" (M) = (((C^lambda mod (m^2)-1)/m)*mu mod m)^d mod n"""
-	c 		= gmpy2.xmpz(_c)
-	lmda 	= gmpy2.xmpz(_lambda)
-	m 		= gmpy2.xmpz(_m)
-	d 		= gmpy2.xmpz(_d)
-	mu 		= gmpy2.xmpz(_mu)
-	n 		= gmpy2.xmpz(_n)
-	
-
-	b1 = f_mod(pow((f_mod(mul((((pow(c, lmda) % (pow(m, 2))-1))/m), mu), m)),d), n)
+	c    = gmpy2.xmpz(_c)
+	lmda = gmpy2.xmpz(_lambda)
+	m    = gmpy2.xmpz(_m)
+	d    = gmpy2.xmpz(_d)
+	mu   = gmpy2.xmpz(_mu)
+	n    = gmpy2.xmpz(_n)
+	b1   = f_mod(pow((f_mod(mul((((pow(c, lmda) % (pow(m, 2))-1))/m), mu), m)),d), n)
 	return b1
 
 """http://www.wojtekrj.net/2008/09/pythonalgorithms-fast-modular-exponentiation-script/"""
@@ -122,7 +124,7 @@ def expo(u, m):
 	return prod
 
 # modInv 2
-# 
+#
 def extEuclideanAlg(a, b):
 	if b==0:
 		return 1, 0, a
@@ -138,15 +140,16 @@ def modInvEuclid(a, m):
 		return None
 
 # Second RSA
-p = 0
-q = 0
-n=0
+p   = 0
+q   = 0
+n   = 0
 phi = 0
-e = 0
-d = 0
-m = 133
-c = 0
+e   = 0
+d   = 0
+m   = 133
+c   = 0
 drc = 0
+
 def selectPrime():
 	global p
 	global q
@@ -158,6 +161,7 @@ def selectPrime():
 	global c
 	global drc
 	p = getRandom()
+	
 	while not miller_rabin.millerRabin(p, 2):
 		p = getRandom()
 	q = getRandom()
@@ -185,7 +189,7 @@ def selectPrime():
 # print "decrypted: %d"%drc
 
 			# Karatsuba multiplication #
-			
+
 _CUTOFF = 1536
 
 def k_multiply(x, y):

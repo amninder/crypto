@@ -207,6 +207,11 @@ def rsa():
 	print(white("Decryted Text: %d"%m))
 
 @task
+def plotTime():
+	from crypto import plots as plots
+	plots.plotGraphMiller()
+
+@task
 def test():
 	env._p = generatePrime()
 	env.allNUmbers.append(env._p)
