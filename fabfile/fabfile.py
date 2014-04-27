@@ -220,6 +220,14 @@ def plotTime():
 	plots.plotGraphMiller()
 
 @task
+def plotDigits():
+	"""
+		: Plot graph TIME Vs Digits for Miller test
+	"""
+	from crypto import plots as plots
+	plots.plotGraphMillerDigits()
+
+@task
 def test():
 	env._p = generatePrime()
 	env.allNUmbers.append(env._p)

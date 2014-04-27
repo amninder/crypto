@@ -36,10 +36,36 @@ def plotGraphMiller():
 	ani = animation.FuncAnimation(fig, animate)
 	plt.show()
 
+def plotGraphMillerDigits():
+	fig   = plt.figure()
+	ax1   = fig.add_subplot(1,1,1)
+	plt.suptitle("Digits VS Time")
+	plt.xlabel('Digits')
+	plt.ylabel('NanoSeconds')
+	xar   = []
+	yar   = []
+	def animate(i):
+		global param
+		global previous
+		n = plotMillerTime(param)
+		if n[1]>previous:
+			previous = n[1]
+			xar.append(n[2])
+			yar.append(n[0])
+			print ("Time: %d"%n[0])
+			print ("Digits: %d"%int(n[2]))
+			ax1.clear()
+			plt.xlabel('Digits')
+			plt.ylabel('NanoSeconds')
+			ax1.plot(xar, yar)
+		param += 1
+	ani = animation.FuncAnimation(fig, animate)
+	plt.show()
+
 # ______PLOT FUNCTIONS_______
 
 def plotMillerTime(p):
-	multiVar = 1000000000
+	multiVar = 10000000000
 	mills = int(round(time.time()*multiVar))
 	n = (gmpy2.xmpz(RSA.getRandom())**gmpy2.xmpz(p))+(gmpy2.xmpz(RSA.getRandom())**gmpy2.xmpz(p)-1)
 	while not miller_rabin.millerRabin(n, 2):
