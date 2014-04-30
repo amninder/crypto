@@ -58,19 +58,27 @@ def step1():
 	"""STEP 1: get p, q, r, s. All are Primes and of same length.
 	"""
 	print(white("Executing Step 1 of algorithm."))
+	
 	env._p = generatePrime()
+	while bit_length(env._p) < 8:
+		env._p = generatePrime()
 	env.allNUmbers.append(env._p)
-	while bit_length(env._q) != bit_length(env._p) and env._q not in env.allNUmbers:
+	
+	env._q = generatePrime()
+	while bit_length(env._q) != bit_length(env._p):
 		env._q = generatePrime()
 	env.allNUmbers.append(env._q)
 
-	while bit_length(env._r) != bit_length(env._p) and env._r not in env.allNUmbers:
+	env._r = generatePrime()
+	while bit_length(env._r) != bit_length(env._p):
 		env._r = generatePrime()
 	env.allNUmbers.append(env._r)
 
-	while bit_length(env._s) != bit_length(env._p) and env._s not in env.allNUmbers:
+	env._s = generatePrime()
+	while bit_length(env._s) != bit_length(env._p):
 		env._s = generatePrime()
 	env.allNUmbers.append(env._s)
+
 	print("p = %d, Size: %d"%(env._p, bit_length(env._p)))
 	print("q = %d, Size: %d"%(env._q, bit_length(env._q)))
 	print("r = %d, Size: %d"%(env._r, bit_length(env._r)))
@@ -144,7 +152,7 @@ def step6():
 @task
 def encrypt():
 	"""
-	Encrypt: Encrypt Message
+	: Encrypt Message
 	"""
 	print(white("Executing: Encrypting string"))
 	# env._str2NumList = RSA.str2NumList(env.sample_string)
@@ -163,7 +171,7 @@ def encrypt():
 @task
 def decrypt():
 	"""
-	Decrypt: Decrypt Message
+	: Decrypt Message
 	"""
 	# local("fab step1 step2 step3 step4 step5 step6")
 	print(white("Executing: Decryption."))
@@ -234,6 +242,34 @@ def plotPrimePercent():
 	"""
 	from crypto import plots as plots
 	plots.plotPrimeRange()
+
+@task
+def test():
+	env._p = generatePrime()
+	while bit_length(env._p) < 8:
+		env._p = generatePrime()
+	env.allNUmbers.append(env._p)
+	
+	env._q = generatePrime()
+	while bit_length(env._q) != bit_length(env._p):
+		env._q = generatePrime()
+	env.allNUmbers.append(env._q)
+
+	env._r = generatePrime()
+	while bit_length(env._r) != bit_length(env._p):
+		env._r = generatePrime()
+	env.allNUmbers.append(env._r)
+
+	env._s = generatePrime()
+	while bit_length(env._s) != bit_length(env._p):
+		env._s = generatePrime()
+	env.allNUmbers.append(env._s)
+
+	print env.allNUmbers
+	print("p = %d, Size: %d"%(env._p, bit_length(env._p)))
+	print("q = %d, Size: %d"%(env._q, bit_length(env._q)))
+	print("r = %d, Size: %d"%(env._r, bit_length(env._r)))
+	print("s = %d, Size: %d"%(env._s, bit_length(env._s)))
 
 """
 Some python codes
