@@ -247,9 +247,9 @@ def getDigits(num):
 
 
 def generatePrime():
-	n = randint(1, 1000)
+	n = randint(1, 10000)
 	while not miller_rabin.millerRabin(n, 2):
-		n = randint(1, 1000)
+		n = randint(1, 10000)
 	return n
 
 def generateLargePrime(p):
