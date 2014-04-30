@@ -5,6 +5,7 @@ from gmpy2 import *
 import gmpy2
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
+import numpy as np
 import time
 from random import randint
 
@@ -63,8 +64,9 @@ def plotGraphMillerDigits():
 	plt.show()
 
 def plotPrimeRange():
-	r = primeRange(1000000)
+	r = primeRange(100)
 	plt.plot(r[0], r[1])
+	# plt.xticks(np.arange(min(r[0], max(r[0]), 1.0)))
 	plt.ylabel('percent of primes')
 	plt.xlabel('Number Range')
 	plt.show()
@@ -109,6 +111,6 @@ def primeRange(j):
 		range.append(x)
 		tot_primes.append(float(nextPrime(x))/float(x))
 		print ("%.10f in %d"%(float(nextPrime(x))/float(x), x))
-		x += 10
+		x += 1
 	return (range, tot_primes)
 # primeRange(10000)
