@@ -62,6 +62,15 @@ def plotGraphMillerDigits():
 	ani = animation.FuncAnimation(fig, animate)
 	plt.show()
 
+def plotPrimeRange():
+	r = primeRange(1000000)
+	plt.plot(r[0], r[1])
+	plt.ylabel('percent of primes')
+	plt.xlabel('Number Range')
+	plt.show()
+
+
+
 # ______PLOT FUNCTIONS_______
 
 def plotMillerTime(p):
@@ -79,3 +88,27 @@ def totalDigits(num):
 		i += 1
 		num /= 10
 	return i
+
+total_primes = []
+nextP = 1
+def nextPrime(p):
+	power = 100
+	global total_primes
+	global nextP
+	while nextP <= p:
+		nextP = next_prime(nextP)
+		total_primes.append(nextP)
+	return len(total_primes)-1
+	
+
+def primeRange(j):
+	x = 1
+	range = []
+	tot_primes = []
+	while x <=j:
+		range.append(x)
+		tot_primes.append(float(nextPrime(x))/float(x))
+		print ("%.10f in %d"%(float(nextPrime(x))/float(x), x))
+		x += 10
+	return (range, tot_primes)
+# primeRange(10000)

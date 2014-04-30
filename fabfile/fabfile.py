@@ -228,20 +228,12 @@ def plotDigits():
 	plots.plotGraphMillerDigits()
 
 @task
-def test():
-	env._p = generatePrime()
-	env.allNUmbers.append(env._p)
-	while bit_length(env._q) != bit_length(env._p) and env._q not in env.allNUmbers:
-		env._q = generatePrime()
-	env.allNUmbers.append(env._q)
-	while bit_length(env._r)!= bit_length(env._p):
-		if env._r not in env.allNUmbers:
-			print env.allNUmbers
-			env._r = generatePrime()
-		else:
-			pass
-	env.allNUmbers.append(env._q)
-	print env.allNUmbers
+def plotPrimePercent():
+	"""
+	: Plot graph for prime percentage VS Number Range
+	"""
+	from crypto import plots as plots
+	plots.plotPrimeRange()
 
 """
 Some python codes
