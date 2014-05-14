@@ -5,6 +5,7 @@ from gmpy2 import *
 import gmpy2
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
+from matplotlib.backends.backend_pdf import PdfPages
 import numpy as np
 import time
 from random import randint
@@ -69,7 +70,10 @@ def plotPrimeRange():
 	# plt.xticks(np.arange(min(r[0], max(r[0]), 1.0)))
 	plt.ylabel('percent of primes')
 	plt.xlabel('Number Range')
-	plt.show()
+	pp = PdfPages('multipage.pdf')
+	plt.savefig(pp, format='pdf')
+	pp.close()
+	# plt.show()
 
 
 
