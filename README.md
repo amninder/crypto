@@ -9,5 +9,6 @@ The prime purpose of this project is to demonstrate the functionality of Secure 
 
 <h2>Algorithms Implemented:</h2>
 1. Secure RSA
-2. MersenneTwister (MT19937) 3. Karatsuba Multiplication
+2. MersenneTwister (MT19937) 
+3. Karatsuba Multiplication
 4. Miller-Rabin primality test
