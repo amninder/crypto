@@ -97,13 +97,13 @@ get_last_31_bit = (2**_r)-1
 
 def initialize_generator(seed):
 	MT[0] = seed
-	for i in xrange(1,624):
+	for i in xrange(1,_n):
 		MT[i] = ((1812433253 *MT[i-1])^((MT[i-1]>>30) +1)) & bitmask_upper
 
 def generate_numbers():
-	for i in xrange(624):
-		y = (MT[i] & bitmask_lower) + (MT[(i+1) % 624] & get_last_31_bit)
-		MT[i] = MT[(i+_m) % 624]^(y>>1)
+	for i in xrange(_n):
+		y = (MT[i] & bitmask_lower) + (MT[(i+1) % _n] & get_last_31_bit)
+		MT[i] = MT[(i+_m) % _n]^(y>>1)
 		if y%2 !=0:
 			MT[i] ^= _a
 
@@ -124,3 +124,36 @@ def extract_number():
 def retRandom(seed):
 	initialize_generator(seed)
 	return extract_number()
+
+
+import miller_rabin
+from datetime import datetime
+import time
+
+
+
+def seed():
+    return datetime.now().microsecond
+def generateLargePrime(p):
+    n = retRandom(p)
+    while not miller_rabin.millerRabin(n, 2):
+        n = retRandom(p)
+    return n
+
+for x in xrange(1,31):
+    millis = int(round(time.time() * 1000))
+    for x in xrange(1,5001):
+        retRandom(seed())# print "%d: %d"%(x, generateLargePrime(seed()))
+    millis = int(round(time.time() * 1000))-millis
+    with open('file.txt', 'a') as f:
+        f.write("%d\n"%(millis))
+
+def rsa():
+    for x in xrange(1,31):
+        millis = int(round(time.time() * 1000))
+        for x in xrange(1,5001):
+            _p = retRandom(seed())
+        millis = int(round(time.time() * 1000))-millis
+        with open('file.txt', 'a') as f:
+            f.write("%d\n"%(millis))
+

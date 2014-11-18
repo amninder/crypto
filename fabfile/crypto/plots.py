@@ -64,7 +64,7 @@ def plotGraphMillerDigits():
 	plt.show()
 
 def plotPrimeRange():
-	r = primeRange(100)
+	r = primeRange(1000000)
 	plt.plot(r[0], r[1])
 	# plt.xticks(np.arange(min(r[0], max(r[0]), 1.0)))
 	plt.ylabel('percent of primes')
@@ -76,12 +76,13 @@ def plotPrimeRange():
 # ______PLOT FUNCTIONS_______
 
 def plotMillerTime(p):
-	multiVar = 10000000000
+	multiVar = 1000000000
 	mills = int(round(time.time()*multiVar))
 	n = (gmpy2.xmpz(RSA.getRandom())**gmpy2.xmpz(p))+(gmpy2.xmpz(RSA.getRandom())**gmpy2.xmpz(p)-1)
 	while not miller_rabin.millerRabin(n, 2):
 		n = (gmpy2.xmpz(RSA.getRandom())**gmpy2.xmpz(p))+(gmpy2.xmpz(RSA.getRandom())**gmpy2.xmpz(p)-1)
 	mills = int(round(time.time()*multiVar)) - mills
+	print mills
 	return (mills, bit_length(n), totalDigits(n))
 
 def totalDigits(num): 
@@ -105,12 +106,12 @@ def nextPrime(p):
 
 def primeRange(j):
 	x = 1
-	range = []
+	ran = []
 	tot_primes = []
 	while x <=j:
-		range.append(x)
+		ran.append(x)
 		tot_primes.append(float(nextPrime(x))/float(x))
 		print ("%.10f in %d"%(float(nextPrime(x))/float(x), x))
 		x += 1
-	return (range, tot_primes)
+	return (ran, tot_primes)
 # primeRange(10000)
